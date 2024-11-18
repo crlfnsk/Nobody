@@ -12,5 +12,7 @@ MODULE parameters
   INTEGER, PARAMETER :: I1B = SELECTED_INT_KIND(2)
   INTEGER, PARAMETER :: SP  = KIND(1.0)
   INTEGER, PARAMETER :: DP  = KIND(1.d0)
+
+  REAL (KIND=8) :: solarmass = 8.1
   
 END MODULE parameters
