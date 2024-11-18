@@ -1,0 +1,5 @@
+# Inside the src folder:
+src/
+.parameters.mod
+.nbody_particles.mod
+.nbody_io.mod
