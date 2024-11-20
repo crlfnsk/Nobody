@@ -11,7 +11,7 @@ MODULE nbody_io
   IMPLICIT NONE
   PRIVATE
 
-  PUBLIC :: load_bodies, print_bodies
+  PUBLIC :: load_bodies, print_bodies, print_acc, print_pos
 
 CONTAINS
 
@@ -50,8 +50,6 @@ CONTAINS
     TYPE(particle)            :: p
 
     n = get_n(this)
-
-    PRINT*, n
     
     DO i=1,n
 
@@ -61,5 +59,53 @@ CONTAINS
     END DO
 
   END SUBROUTINE print_bodies
+
+  !
+  ! print acceleration to STDOUT 
+  !
+  SUBROUTINE print_acc(this)
+    IMPLICIT NONE
+    TYPE(nbodies), INTENT(in) :: this
+
+    INTEGER(I4B)              :: i, n
+    TYPE(particle)            :: p
+
+    n = get_n(this)
+
+    PRINT*, n
+    
+    DO i=1,n
+
+       p = get_body(this, i)
+       PRINT*, get_acc(p)
+
+    END DO
+
+  END SUBROUTINE print_acc
+
+  !
+  ! print positions to STDOUT 
+  !
+  SUBROUTINE print_pos(this)
+    IMPLICIT NONE
+    TYPE(nbodies), INTENT(in) :: this
+
+    INTEGER(I4B)              :: i, n
+    TYPE(particle)            :: p
+    REAL(DP), DIMENSION(3)    :: r
+
+    n = get_n(this)
+    do i=1, n
+      p = get_body(this, i)
+      r = get_pos(p)
+      if(i/=n) then
+        write(6,"(F20.16,',',F20.16,',')", advance="no") r(1), r(2)
+      else
+        write(6,"(F20.16,',',F20.16)", advance="no") r(1), r(2)
+      endif
+    end do
+    write(*,*)
+
+  END SUBROUTINE print_pos
 
 END MODULE nbody_io
