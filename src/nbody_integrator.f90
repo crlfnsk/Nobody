@@ -9,7 +9,7 @@ PROGRAM nbody_integrator
   USE nbody_particles
   USE nbody_io
   IMPLICIT NONE
-  INTEGER(I4B) :: i, N = 100
+  INTEGER(I4B) :: i, N = 1500
 
   ! creates a variable for the nbody system
   TYPE(nbodies) :: system
@@ -25,7 +25,7 @@ PROGRAM nbody_integrator
   DO i=1, N
     CALL update_r(system)
     CALL update_v(system)
-    CALL print_pos(system)
+    CALL print_pos2d(system)
   END DO
 
 
@@ -55,7 +55,7 @@ SUBROUTINE update_a(this)
       if(i /= j) then
         p_j = get_pos(get_body(this, j))
         p_i = get_pos(get_body(this, i))
-        m_j = get_mass(get_body(this, i))
+        m_j = get_mass(get_body(this, j))
         r = (p_i - p_j)
         r_ij = (r(1)**2 + r(2)**2 + r(3)**2)**1.5
         a = a + (m_j / r_ij) * r
@@ -79,11 +79,11 @@ SUBROUTINE update_r(this)
   REAL(DP)                  :: dt
 
   n = get_n(this)
-  dt = 0.01
+  dt = 0.007
 
   do i = 1, n
 
-    r = get_pos(get_body(this, i)) + get_vel(get_body(this, i))*dt + get_acc(get_body(this, i))*dt**2
+    r = get_pos(get_body(this, i)) + get_vel(get_body(this, i))*dt + get_acc(get_body(this, i))*dt**2/2.
 
     CALL set_pos(this, i, r)
   end do
@@ -102,7 +102,7 @@ SUBROUTINE update_v(this)
   REAL(DP)                  :: dt
 
   n = get_n(this)
-  dt = 0.01
+  dt = 0.007
 
   that = this
 

@@ -11,7 +11,7 @@ MODULE nbody_io
   IMPLICIT NONE
   PRIVATE
 
-  PUBLIC :: load_bodies, print_bodies, print_acc, print_pos
+  PUBLIC :: load_bodies, print_bodies, print_acc, print_pos, print_pos2d
 
 CONTAINS
 
@@ -99,13 +99,35 @@ CONTAINS
       p = get_body(this, i)
       r = get_pos(p)
       if(i/=n) then
-        write(6,"(F20.16,',',F20.16,',')", advance="no") r(1), r(2)
+        write(6,"(F20.16,',',F20.16,',',F20.16,',')", advance="no") r(1), r(2), r(3)
       else
-        write(6,"(F20.16,',',F20.16)", advance="no") r(1), r(2)
+        write(6,"(F20.16,',',F20.16,',',F20.16)", advance="no") r(1), r(2), r(3)
       endif
     end do
     write(*,*)
 
   END SUBROUTINE print_pos
+
+  SUBROUTINE print_pos2d(this)
+    IMPLICIT NONE
+    TYPE(nbodies), INTENT(in) :: this
+
+    INTEGER(I4B)              :: i, n
+    TYPE(particle)            :: p
+    REAL(DP), DIMENSION(3)    :: r
+
+    n = get_n(this)
+    do i=1, n
+      p = get_body(this, i)
+      r = get_pos(p)
+      if(i/=n) then
+        write(6,"(F20.16,',',F20.16,',')", advance="no") r(1), r(2)
+      else
+        write(6,"(F20.16,',',F20.16,',')", advance="no") r(1), r(2)
+      endif
+    end do
+    write(*,*)
+
+  END SUBROUTINE print_pos2d
 
 END MODULE nbody_io
