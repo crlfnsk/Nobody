@@ -33,6 +33,7 @@ MODULE nbody_particles
   PUBLIC :: new_nbodies, delete_nbodies
   PUBLIC :: get_n, get_body, get_mass, get_pos, get_vel
   PUBLIC :: set_body
+  PUBLIC :: set_acc, get_acc, set_pos, set_vel
 
 CONTAINS
 
@@ -80,6 +81,45 @@ CONTAINS
 
   END SUBROUTINE set_body_array7
 
+
+  !
+  !
+  !
+  SUBROUTINE set_acc(this, idx, a)
+    IMPLICIT NONE
+    TYPE(nbodies), INTENT(inout) :: this
+    REAL(DP), DIMENSION(3)       :: a
+    INTEGER(I4B), INTENT(in)     :: idx
+
+    this%bodies(idx)%acc = a
+
+  END SUBROUTINE set_acc
+
+  !
+  !
+  !
+  SUBROUTINE set_pos(this, idx, p)
+    IMPLICIT NONE
+    TYPE(nbodies), INTENT(inout) :: this
+    REAL(DP), DIMENSION(3)       :: p
+    INTEGER(I4B), INTENT(in)     :: idx
+
+    this%bodies(idx)%pos = p
+
+  END SUBROUTINE set_pos
+
+  !
+  !
+  !
+  SUBROUTINE set_vel(this, idx, v)
+    IMPLICIT NONE
+    TYPE(nbodies), INTENT(inout) :: this
+    REAL(DP), DIMENSION(3)       :: v
+    INTEGER(I4B), INTENT(in)     :: idx
+
+    this%bodies(idx)%vel = v
+
+  END SUBROUTINE set_vel
   !
   ! get a particle
   !
@@ -116,6 +156,18 @@ CONTAINS
     pos = this%pos
 
   END FUNCTION get_pos
+
+  !
+  ! get a particle position
+  !
+  FUNCTION get_acc(this) RESULT(acc)
+    IMPLICIT NONE
+    TYPE(particle), INTENT(in) :: this
+    REAL(DP), DIMENSION(3)     :: acc
+
+    acc = this%acc
+
+  END FUNCTION get_acc
 
   !
   ! get a particle velocity
