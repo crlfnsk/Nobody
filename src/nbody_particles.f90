@@ -31,7 +31,7 @@ MODULE nbody_particles
   ! public entities 
   PUBLIC :: particle, nbodies
   PUBLIC :: new_nbodies, delete_nbodies
-  PUBLIC :: get_n, get_body, get_mass, get_pos, get_vel
+  PUBLIC :: get_n, get_body, get_mass, get_pos, get_vel, get_total_mass
   PUBLIC :: set_body
   PUBLIC :: set_acc, get_acc, set_pos, set_vel
 
@@ -144,6 +144,25 @@ CONTAINS
     mass = this%mass
 
   END FUNCTION get_mass
+
+  !
+  ! get total mass
+  !
+  FUNCTION get_total_mass(this) RESULT(mass)
+    IMPLICIT NONE
+    TYPE(nbodies), INTENT(in) :: this
+    REAL(DP)                   :: mass, m
+    INTEGER(I4B) :: i, n
+
+    n = get_n(this)
+    m = 0.
+    DO i=1, n
+      m = m + get_mass(get_body(this, i))
+    END DO
+
+    mass = m
+
+  END FUNCTION get_total_mass
 
   !
   ! get a particle position
