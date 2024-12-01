@@ -1,13 +1,15 @@
-!!+nbody_io.f90
+!!+nbody_integrator_mod.f90
 !!
-!! module: provides functions to read and write nbody data, supported format
-!!         is one line of header with number of particles N follow by N
-!!         lines with particles data (mass, pos, vel --> 7 REALs)
+!! module: provides subroutines for calculating dynamic of an n body system
+!!         using a leapfrog integrator. 
+!!  	     provides functions for calculating total mass of a system and
+!!         Center of Mass position and velocity.
 !!       
 !!-
 MODULE nbody_integrator
     USE parameters
     USE nbody_particles
+    use nbody_io
     IMPLICIT NONE
     PRIVATE
   
@@ -15,10 +17,11 @@ MODULE nbody_integrator
   
   CONTAINS
  
+  !
+  ! calculate particle accelerations as discribed on the Lab Sheet 
+  ! and update them
+  !
   SUBROUTINE update_a(this)
-    use parameters
-    use nbody_particles
-    use nbody_io
     IMPLICIT NONE
     INTEGER(I4B) :: i, j, n
     TYPE(nbodies), INTENT(inout) :: this
@@ -45,17 +48,16 @@ MODULE nbody_integrator
         endif
       end do
   
-      ! update accelaration
+      ! update acceleration
       CALL set_acc(this, i, -a)
   
     end do
   
   END SUBROUTINE update_a
   
-  SUBROUTINE update_r(this)
-    use parameters
-    use nbody_particles
-    use nbody_io
+  !
+  ! calculates new positions with a given precision
+  SUBROUTINE update_r(this, dt)
     IMPLICIT NONE
     INTEGER(I4B) :: i, n
     TYPE(nbodies), INTENT(inout) :: this
@@ -63,21 +65,21 @@ MODULE nbody_integrator
     REAL(DP)                  :: dt
   
     n = get_n(this)
-    dt = 0.0001
   
     do i = 1, n
-  
+      ! calculate positions
       r = get_pos(get_body(this, i)) + get_vel(get_body(this, i))*dt + get_acc(get_body(this, i))*dt**2*0.5
   
+      ! update positions
       CALL set_pos(this, i, r)
     end do
   
   END SUBROUTINE update_r
   
-  SUBROUTINE update_v(this)
-    use parameters
-    use nbody_particles
-    use nbody_io
+  !
+  ! calculate new velocities and update them
+  ! 
+  SUBROUTINE update_v(this, dt)
     IMPLICIT NONE
     INTEGER(I4B) :: i, n
     TYPE(nbodies), INTENT(inout) :: this
@@ -88,29 +90,28 @@ MODULE nbody_integrator
     n = get_n(this)
     allocate(temp_a(n, 3))
   
-    dt = 0.0001
-  
-    !that = this
-  
+    ! store old acceleration data
     DO i=1, n
       temp_a(i,:) = get_acc(get_body(this, i))
     END DO
   
+    ! update acceleration
     CALL update_a(this)
   
     do i = 1, n
-  
+      ! calculate new velocities using old and new accelerations
       v = get_vel(get_body(this, i)) + (get_acc(get_body(this, i)) + temp_a(i,:))*dt*0.5
+
+      ! update velocity
       CALL set_vel(this, i, v)
     end do
   
   END SUBROUTINE update_v
   
-  
+  !
+  ! function for calculating total energy of a system
+  !
   FUNCTION total_energy(this) RESULT(E)
-    use parameters
-    use nbody_particles
-    use nbody_io
     IMPLICIT NONE
     INTEGER(I4B) :: i, j, n
     TYPE(nbodies), INTENT(inout) :: this
@@ -141,11 +142,10 @@ MODULE nbody_integrator
     E = T + U
   END FUNCTION total_energy
   
-  
+  !
+  ! function for finding the magnitude of a vector
+  !  
   FUNCTION norm_vec(vector) RESULT(norm)
-    USE nbody_particles
-    USE parameters
-    USE nbody_io
     IMPLICIT NONE
     REAL(DP), DIMENSION(3)    :: vector
     REAL(DP) :: norm
@@ -153,11 +153,10 @@ MODULE nbody_integrator
     norm = ABS(SQRT(vector(1)**2 + vector(2)**2 + vector(3)**2))
   END FUNCTION norm_vec
   
-  
+  !
+  ! function for calculating CoM position
+  !
   FUNCTION r_CoM(this) RESULT(r_c)
-    USE nbody_particles
-    USE parameters
-    USE nbody_io
     IMPLICIT NONE
     INTEGER(I4B) :: i, n
     TYPE(nbodies), INTENT(in) :: this
@@ -178,10 +177,10 @@ MODULE nbody_integrator
     
   END FUNCTION r_CoM
   
+  !
+  ! function for calculating CoM velocities
+  !
   FUNCTION v_CoM(this) RESULT(v_c)
-    USE nbody_particles
-    USE parameters
-    USE nbody_io
     IMPLICIT NONE
     INTEGER(I4B) :: i, n
     TYPE(nbodies), INTENT(in) :: this

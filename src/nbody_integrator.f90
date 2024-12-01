@@ -1,6 +1,7 @@
-!!+nbody_integrator
+!!+nbody_integrator.f90
 !!
-!! program: program to integrate an nbody sytem 
+!! Main Program to call subroutines from nbody_integrator_mod.f90 to integrate an n body system.
+!! 
 !!
 !!-
 PROGRAM nbody_integrator
@@ -9,7 +10,8 @@ PROGRAM nbody_integrator
   USE nbody_io
   USE nbody_integrator
   IMPLICIT NONE
-  INTEGER(I4B) :: i, N
+  INTEGER(I4B)  :: i, N, stepsize
+  REAL(DP)      :: dt
 
   ! creates a variable for the nbody system
   TYPE(nbodies) :: system
@@ -21,15 +23,31 @@ PROGRAM nbody_integrator
   ! prints the particles in system
   !CALL print_bodies(system)
 
+  ! initialize acceleration
   CALL update_a(system)
 
-  N = 100
+  ! Number of integration staps to be made
+  N = 40000
+  dt = 0.00005
+
+  ! stepsize for printing only every n_stepsize timestep
+  stepsize = 1
   
+  ! Loop over number of timesteps
   DO i=1, N
-    CALL update_r(system)
-    CALL update_v(system)
-    !CALL print_pos2d(system)
-    !print*, v_CoM(system)
+    ! calculate new positions and velocities
+    CALL update_r(system, dt)
+    CALL update_v(system, dt)
+
+    ! printing timesteps and positions
+    !write(6, "(I0, ' ')", advance='no') i     ! comment out to leave out timesteps
+
+    CALL print_pos(system, i, stepsize)    ! prints x,y,z positions of particle
+    !CALL print_pos2d(system)              ! prints x,y positions of particle
+
+    ! printing Center of Mass (CoM) positions and velocities
+    !print*, r_CoM(system)         ! prints CoM position 
+    !print*, v_CoM(system)        ! prints CoM velocity
   END DO
 
 

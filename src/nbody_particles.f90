@@ -81,9 +81,34 @@ CONTAINS
 
   END SUBROUTINE set_body_array7
 
+  !
+  ! set position for a particle
+  !
+  SUBROUTINE set_pos(this, idx, p)
+    IMPLICIT NONE
+    TYPE(nbodies), INTENT(inout) :: this
+    REAL(DP), DIMENSION(3)       :: p
+    INTEGER(I4B), INTENT(in)     :: idx
 
+    this%bodies(idx)%pos = p
+
+  END SUBROUTINE set_pos
+  
   !
+  ! set velocity for a particle
   !
+  SUBROUTINE set_vel(this, idx, v)
+    IMPLICIT NONE
+    TYPE(nbodies), INTENT(inout) :: this
+    REAL(DP), DIMENSION(3)       :: v
+    INTEGER(I4B), INTENT(in)     :: idx
+    
+    this%bodies(idx)%vel = v
+    
+  END SUBROUTINE set_vel
+ 
+  !
+  ! set acceleration for a particle
   !
   SUBROUTINE set_acc(this, idx, a)
     IMPLICIT NONE
@@ -95,31 +120,6 @@ CONTAINS
 
   END SUBROUTINE set_acc
 
-  !
-  !
-  !
-  SUBROUTINE set_pos(this, idx, p)
-    IMPLICIT NONE
-    TYPE(nbodies), INTENT(inout) :: this
-    REAL(DP), DIMENSION(3)       :: p
-    INTEGER(I4B), INTENT(in)     :: idx
-
-    this%bodies(idx)%pos = p
-
-  END SUBROUTINE set_pos
-
-  !
-  !
-  !
-  SUBROUTINE set_vel(this, idx, v)
-    IMPLICIT NONE
-    TYPE(nbodies), INTENT(inout) :: this
-    REAL(DP), DIMENSION(3)       :: v
-    INTEGER(I4B), INTENT(in)     :: idx
-
-    this%bodies(idx)%vel = v
-
-  END SUBROUTINE set_vel
   !
   ! get a particle
   !
@@ -175,19 +175,7 @@ CONTAINS
     pos = this%pos
 
   END FUNCTION get_pos
-
-  !
-  ! get a particle position
-  !
-  FUNCTION get_acc(this) RESULT(acc)
-    IMPLICIT NONE
-    TYPE(particle), INTENT(in) :: this
-    REAL(DP), DIMENSION(3)     :: acc
-
-    acc = this%acc
-
-  END FUNCTION get_acc
-
+  
   !
   ! get a particle velocity
   !
@@ -195,12 +183,23 @@ CONTAINS
     IMPLICIT NONE
     TYPE(particle), INTENT(in) :: this
     REAL(DP), DIMENSION(3)     :: vel
-
+    
     vel = this%vel
-
+    
   END FUNCTION get_vel
-
-
+  
+    !
+    ! get a particles acceleration
+    !
+    FUNCTION get_acc(this) RESULT(acc)
+      IMPLICIT NONE
+      TYPE(particle), INTENT(in) :: this
+      REAL(DP), DIMENSION(3)     :: acc
+  
+      acc = this%acc
+  
+    END FUNCTION get_acc
+  
   ! 
   ! create body data
   !
