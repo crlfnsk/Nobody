@@ -12,6 +12,7 @@ MODULE nbody_io
   PRIVATE
 
   PUBLIC :: load_bodies, print_bodies, print_acc, print_pos, print_pos2d
+  
 
 CONTAINS
 
@@ -86,25 +87,28 @@ CONTAINS
   !
   ! print positions to STDOUT 
   !
-  SUBROUTINE print_pos(this)
+  SUBROUTINE print_pos(this, idx, stepsize)
     IMPLICIT NONE
     TYPE(nbodies), INTENT(in) :: this
 
-    INTEGER(I4B)              :: i, n
+    INTEGER(I4B)              :: i, n, idx, stepsize
     TYPE(particle)            :: p
     REAL(DP), DIMENSION(3)    :: r
 
     n = get_n(this)
-    do i=1, n
-      p = get_body(this, i)
-      r = get_pos(p)
-      if(i/=n) then
-        write(6,"(F20.16,',',F20.16,',',F20.16,',')", advance="no") r(1), r(2), r(3)
-      else
-        write(6,"(F20.16,',',F20.16,',',F20.16)", advance="no") r(1), r(2), r(3)
-      endif
-    end do
-    write(*,*)
+    if (mod(idx-1,stepsize) == 0) then
+      write(6,"(I0, ' ')", advance="no") idx
+      do i=1, n
+        p = get_body(this, i)
+        r = get_pos(p)
+        if(i/=n) then
+          write(6,"(F20.16,' ',F20.16,' ',F20.16,' ')", advance="no") r(1), r(2), r(3)
+        else
+          write(6,"(F20.16,' ',F20.16,' ',F20.16)", advance="no") r(1), r(2), r(3)
+        endif
+      end do
+      write(*,*)
+    endif
 
   END SUBROUTINE print_pos
 

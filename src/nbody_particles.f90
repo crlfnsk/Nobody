@@ -31,7 +31,7 @@ MODULE nbody_particles
   ! public entities 
   PUBLIC :: particle, nbodies
   PUBLIC :: new_nbodies, delete_nbodies
-  PUBLIC :: get_n, get_body, get_mass, get_pos, get_vel
+  PUBLIC :: get_n, get_body, get_mass, get_pos, get_vel, get_total_mass
   PUBLIC :: set_body
   PUBLIC :: set_acc, get_acc, set_pos, set_vel
 
@@ -81,9 +81,34 @@ CONTAINS
 
   END SUBROUTINE set_body_array7
 
+  !
+  ! set position for a particle
+  !
+  SUBROUTINE set_pos(this, idx, p)
+    IMPLICIT NONE
+    TYPE(nbodies), INTENT(inout) :: this
+    REAL(DP), DIMENSION(3)       :: p
+    INTEGER(I4B), INTENT(in)     :: idx
 
+    this%bodies(idx)%pos = p
+
+  END SUBROUTINE set_pos
+  
   !
+  ! set velocity for a particle
   !
+  SUBROUTINE set_vel(this, idx, v)
+    IMPLICIT NONE
+    TYPE(nbodies), INTENT(inout) :: this
+    REAL(DP), DIMENSION(3)       :: v
+    INTEGER(I4B), INTENT(in)     :: idx
+    
+    this%bodies(idx)%vel = v
+    
+  END SUBROUTINE set_vel
+ 
+  !
+  ! set acceleration for a particle
   !
   SUBROUTINE set_acc(this, idx, a)
     IMPLICIT NONE
@@ -95,31 +120,6 @@ CONTAINS
 
   END SUBROUTINE set_acc
 
-  !
-  !
-  !
-  SUBROUTINE set_pos(this, idx, p)
-    IMPLICIT NONE
-    TYPE(nbodies), INTENT(inout) :: this
-    REAL(DP), DIMENSION(3)       :: p
-    INTEGER(I4B), INTENT(in)     :: idx
-
-    this%bodies(idx)%pos = p
-
-  END SUBROUTINE set_pos
-
-  !
-  !
-  !
-  SUBROUTINE set_vel(this, idx, v)
-    IMPLICIT NONE
-    TYPE(nbodies), INTENT(inout) :: this
-    REAL(DP), DIMENSION(3)       :: v
-    INTEGER(I4B), INTENT(in)     :: idx
-
-    this%bodies(idx)%vel = v
-
-  END SUBROUTINE set_vel
   !
   ! get a particle
   !
@@ -146,6 +146,25 @@ CONTAINS
   END FUNCTION get_mass
 
   !
+  ! get total mass
+  !
+  FUNCTION get_total_mass(this) RESULT(mass)
+    IMPLICIT NONE
+    TYPE(nbodies), INTENT(in) :: this
+    REAL(DP)                   :: mass, m
+    INTEGER(I4B) :: i, n
+
+    n = get_n(this)
+    m = 0.
+    DO i=1, n
+      m = m + get_mass(get_body(this, i))
+    END DO
+
+    mass = m
+
+  END FUNCTION get_total_mass
+
+  !
   ! get a particle position
   !
   FUNCTION get_pos(this) RESULT(pos)
@@ -156,19 +175,7 @@ CONTAINS
     pos = this%pos
 
   END FUNCTION get_pos
-
-  !
-  ! get a particle position
-  !
-  FUNCTION get_acc(this) RESULT(acc)
-    IMPLICIT NONE
-    TYPE(particle), INTENT(in) :: this
-    REAL(DP), DIMENSION(3)     :: acc
-
-    acc = this%acc
-
-  END FUNCTION get_acc
-
+  
   !
   ! get a particle velocity
   !
@@ -176,12 +183,23 @@ CONTAINS
     IMPLICIT NONE
     TYPE(particle), INTENT(in) :: this
     REAL(DP), DIMENSION(3)     :: vel
-
+    
     vel = this%vel
-
+    
   END FUNCTION get_vel
-
-
+  
+    !
+    ! get a particles acceleration
+    !
+    FUNCTION get_acc(this) RESULT(acc)
+      IMPLICIT NONE
+      TYPE(particle), INTENT(in) :: this
+      REAL(DP), DIMENSION(3)     :: acc
+  
+      acc = this%acc
+  
+    END FUNCTION get_acc
+  
   ! 
   ! create body data
   !
