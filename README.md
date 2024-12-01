@@ -1,6 +1,10 @@
 # N-body System
 
-This readme file is supposed to explain how to use the nbody program.
+This repository is designed to calculate and display the evolution of an N-body system. You can set up the initial condition of the system you desire to analyze via an input file. The results are supposed to be presented as a video.
+
+You can achieve this by executing the program in two steps as following:
+$ ./nbody < {input_file} > movie/out
+$ ./plot_frames.sh
 
 This program was designed by Caro, Antonio and Carl. 
 
