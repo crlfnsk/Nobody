@@ -28,7 +28,7 @@ while read line
 do
 
     # set name of output png file 
-    outfile=`printf "threebody_%5.5i.png" $i`
+    outfile=`printf "movie/threebody_%5.5i.png" $i`
     echo generating $outfile
 
 
@@ -53,8 +53,8 @@ set size 0.5, 1
 set xlabel 'x'
 set ylabel 'y'
 
-set xrange [-2 to 2]
-set yrange [-2 to 2]
+set xrange [-1.5 to 2.5]
+set yrange [-1.71132486540518711774542560974902127 to 2.288675134594812882254574390250978]
 
 set xtics 1
 set ytics 1
@@ -66,8 +66,8 @@ plot 'tmp.dat' using 2:3 with points pt 7 ps 3,\
 set origin 0.45 , 0.0
 set size 0.6, 1
 
-set xrange [-0.5 to 0.5]
-set yrange [-0.5 to 0.5]
+set xrange [-0.25 to 1.25]
+set yrange [-0.46132486540518711774542560974902127 to 1.038675134594812882254574390250978]
 
 set xtics 0.5
 set ytics 0.5

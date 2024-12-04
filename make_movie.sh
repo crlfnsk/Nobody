@@ -17,7 +17,8 @@
 #                or to rename the output
 
 # setting some options
-opt=vbitrate=2160000:mbd=2:keyint=132:vqblur=1.0:cmp=2:subcmp=2:dia=2:o=mpv_flags=+mv0:last_pred=3
+#opt=vbitrate=2160000:mbd=2:keyint=132:vqblur=1.0:cmp=2:subcmp=2:dia=2:o=mpv_flags=+mv0:last_pred=3
 
 # encoding the movie using Microsofts MPEG4 encoder for compatibility
-mencoder mf://*.png -mf fps=24 -ovc lavc -lavcopts vcodec=msmpeg4v2:$opt -o out.avi
+ffmpeg -framerate 30 -pattern_type glob -i 'movie/*.png' \
+  -c:v libx264 -pix_fmt yuv420p out.mp4

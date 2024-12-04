@@ -16,6 +16,11 @@ PROGRAM nbody_integrator
   ! creates a variable for the nbody system
   TYPE(nbodies) :: system
 
+  ! Number of integration steps to be made ! worked for : N =  500000 , dt = 0.0001
+  READ*, N   
+  READ*, dt 
+  ! stepsize for printing only every n_stepsize timestep
+  READ*, stepsize
 
   ! allocates memory and reads the particle information
   CALL load_bodies(system)
@@ -25,13 +30,6 @@ PROGRAM nbody_integrator
 
   ! initialize acceleration
   CALL update_a(system)
-
-  ! Number of integration staps to be made
-  N = 40000
-  dt = 0.00005
-
-  ! stepsize for printing only every n_stepsize timestep
-  stepsize = 1
   
   ! Loop over number of timesteps
   DO i=1, N
@@ -45,6 +43,8 @@ PROGRAM nbody_integrator
     CALL print_pos(system, i, stepsize)    ! prints x,y,z positions of particle
     !CALL print_pos2d(system)              ! prints x,y positions of particle
 
+    Call print_E(system, i, stepsize)
+
     ! printing Center of Mass (CoM) positions and velocities
     !print*, r_CoM(system)         ! prints CoM position 
     !print*, v_CoM(system)        ! prints CoM velocity
@@ -55,5 +55,3 @@ PROGRAM nbody_integrator
   CALL delete_nbodies(system)
 
 END PROGRAM nbody_integrator
-
-

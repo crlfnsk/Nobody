@@ -11,7 +11,7 @@ MODULE nbody_io
   IMPLICIT NONE
   PRIVATE
 
-  PUBLIC :: load_bodies, print_bodies, print_acc, print_pos, print_pos2d
+  PUBLIC :: load_bodies, print_bodies, print_acc, print_pos, print_pos2d, print_E
   
 
 CONTAINS
@@ -133,5 +133,21 @@ CONTAINS
     write(*,*)
 
   END SUBROUTINE print_pos2d
+
+  SUBROUTINE print_E(this, idx, stepsize)
+    IMPLICIT NONE
+    TYPE(nbodies), INTENT(in) :: this
+
+    INTEGER(I4B)              :: n, idx, stepsize
+    REAL(DP)                  :: total_energy
+
+    OPEN(UNIT=20, file='energy.txt')
+    n = get_n(this)
+    if (mod(idx-1,stepsize) == 0) then
+      write(20,"(I0, ' ')", advance="no") idx
+      write(20, *) total_energy
+    endif
+    
+  END SUBROUTINE print_E
 
 END MODULE nbody_io
