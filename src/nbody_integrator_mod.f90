@@ -134,9 +134,9 @@ MODULE nbody_integrator
           U = U - m_i*m_j / norm_vec(r)
         ENDIF
       END DO
-      !T=SUM(1<i<n) |v|^2/(2*mi)
+      !T=SUM(1<i<n) |v|^2/(2*mi) *** müsste es nicht mi/2 *|v|^2 sein?
       m_i = get_mass(get_body(this, i))
-      T = T + norm_vec(get_vel(get_body(this, i)))**2 / (2 * m_i)
+      T = T + (norm_vec(get_vel(get_body(this, i)))**2 * m_i)/ 2 ! modified the kinetic energy
     END DO
   
     E = T + U

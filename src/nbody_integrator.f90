@@ -11,7 +11,7 @@ PROGRAM nbody_integrator
   USE nbody_integrator
   IMPLICIT NONE
   INTEGER(I4B)  :: i, N, stepsize
-  REAL(DP)      :: t, dt, E0, error
+  REAL(DP)      :: t, dt, E0
 
   ! creates a variable for the nbody system
   TYPE(nbodies) :: system
@@ -34,7 +34,6 @@ PROGRAM nbody_integrator
 
   ! Initialize total energy
   E0=total_energy(system)
-  error=0.
   
   ! Loop over number of timesteps
   DO i=1, N
@@ -52,12 +51,7 @@ PROGRAM nbody_integrator
     !print*, r_CoM(system)         ! prints CoM position 
     !print*, v_CoM(system)        ! prints CoM velocity
 
-    error = (total_energy(system) - E0) / E0
-    !Call print_E(system, i, stepsize)
-    OPEN(UNIT=20, file='energy.txt')
-    WRITE(20,"(I0, ' ')", advance="no") i
-    !WRITE(20, *) error
-    WRITE(20, *) error
+    CALL print_E(i, E0, total_energy(system))
   END DO
   
   CLOSE(20)

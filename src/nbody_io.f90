@@ -134,19 +134,16 @@ CONTAINS
 
   END SUBROUTINE print_pos2d
 
-  SUBROUTINE print_E(this, idx, stepsize)
+  SUBROUTINE print_E(idx, E0, E)
     IMPLICIT NONE
-    TYPE(nbodies), INTENT(in) :: this
-
-    INTEGER(I4B)              :: n, idx, stepsize
-    REAL(DP)                  :: total_energy
-
+    
+    INTEGER(I4B)              :: idx
+    REAL(DP)                  :: E0, E, error
+    
+    error = (E - E0) / E0
     OPEN(UNIT=20, file='energy.txt')
-    n = get_n(this)
-    if (mod(idx-1,stepsize) == 0) then
-      write(20,"(I0, ' ')", advance="no") idx
-      write(20, *) total_energy
-    endif
+    WRITE(20,"(I0, ' ')", advance="no") idx
+    WRITE(20, *) error
     
   END SUBROUTINE print_E
 
