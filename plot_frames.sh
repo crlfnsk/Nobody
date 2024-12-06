@@ -12,7 +12,7 @@
 
 # settings
 infile='out'
-every=100
+every=$1
 
 # loop over lines 
 i=0     # file number counter
@@ -38,7 +38,7 @@ do
 # use lots of settings in gnuplot including multiplot 
 # make sure FreeSans.ttf is in the stated dir or change accordingly
 gnuplot << EOF
-set term png font "/usr/share/fonts/truetype/freefont/FreeSans.ttf" 20 size 480,480
+set term png font "/usr/share/fonts/truetype/freefont/FreeSans.ttf" 20 size 640,480
 set out '$outfile'
 
 unset key
@@ -50,11 +50,11 @@ set origin 0.0 , 0.0
 set xlabel 'x'
 set ylabel 'y'
 
-set xrange [-12 to 12]
-set yrange [-12 to 12]
+set xrange [-1 to 1]
+set yrange [-1 to 1]
 
-set xtics 3
-set ytics 3
+set xtics 0.3
+set ytics 0.3
 
 plot 'tmp.dat' using 2:3 with points pt 7 ps 3,\
      'tmp.dat' using 5:6 with points pt 7 ps 3
