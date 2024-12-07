@@ -11,11 +11,17 @@ PROGRAM nbody_integrator
   USE nbody_integrator
   IMPLICIT NONE
   INTEGER(I4B)  :: i, N, stepsize
-  REAL(DP)      :: dt
+  REAL(DP)      :: t, dt, E0
 
   ! creates a variable for the nbody system
   TYPE(nbodies) :: system
 
+  ! Number of integration steps to be made ! worked for : N =  500000 , dt = 0.0001
+  READ*, t   
+  READ*, dt 
+  N = int(t/dt)
+  ! stepsize for printing only every n_stepsize timestep
+  READ*, stepsize
 
   ! allocates memory and reads the particle information
   CALL load_bodies(system)
@@ -26,12 +32,8 @@ PROGRAM nbody_integrator
   ! initialize acceleration
   CALL update_a(system)
 
-  ! Number of integration staps to be made
-  N = 40000
-  dt = 0.00005
-
-  ! stepsize for printing only every n_stepsize timestep
-  stepsize = 1
+  ! Initialize total energy
+  E0=total_energy(system)
   
   ! Loop over number of timesteps
   DO i=1, N
@@ -48,12 +50,12 @@ PROGRAM nbody_integrator
     ! printing Center of Mass (CoM) positions and velocities
     !print*, r_CoM(system)         ! prints CoM position 
     !print*, v_CoM(system)        ! prints CoM velocity
+
+    CALL print_E(i, E0, total_energy(system))
   END DO
-
-
+  
+  CLOSE(20)
   ! free memory
   CALL delete_nbodies(system)
 
 END PROGRAM nbody_integrator
-
-

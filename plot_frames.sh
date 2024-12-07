@@ -12,7 +12,7 @@
 
 # settings
 infile='out'
-every=100
+every=$1
 
 # loop over lines 
 i=0     # file number counter
@@ -28,7 +28,7 @@ while read line
 do
 
     # set name of output png file 
-    outfile=`printf "threebody_%5.5i.png" $i`
+    outfile=`printf "movie/threebody_%5.5i.png" $i`
     echo generating $outfile
 
 
@@ -38,43 +38,26 @@ do
 # use lots of settings in gnuplot including multiplot 
 # make sure FreeSans.ttf is in the stated dir or change accordingly
 gnuplot << EOF
-set term png font "/usr/share/fonts/truetype/freefont/FreeSans.ttf" 20 size 1024,480
+set term png font "/usr/share/fonts/truetype/freefont/FreeSans.ttf" 20 size 640,480
 set out '$outfile'
-
-set multiplot
 
 unset key
 set border 31 lw 3
 set size square
 
 set origin 0.0 , 0.0
-set size 0.5, 1
 
 set xlabel 'x'
 set ylabel 'y'
 
-set xrange [-2 to 2]
-set yrange [-2 to 2]
+set xrange [-1 to 1]
+set yrange [-1 to 1]
 
-set xtics 1
-set ytics 1
-
-plot 'tmp.dat' using 2:3 with points pt 7 ps 3,\
-     'tmp.dat' using 5:6 with points pt 7 ps 3,\
-     'tmp.dat' using 8:9 with points pt 7 ps 3
-
-set origin 0.45 , 0.0
-set size 0.6, 1
-
-set xrange [-0.5 to 0.5]
-set yrange [-0.5 to 0.5]
-
-set xtics 0.5
-set ytics 0.5
+set xtics 0.3
+set ytics 0.3
 
 plot 'tmp.dat' using 2:3 with points pt 7 ps 3,\
-     'tmp.dat' using 5:6 with points pt 7 ps 3,\
-     'tmp.dat' using 8:9 with points pt 7 ps 3
+     'tmp.dat' using 5:6 with points pt 7 ps 3
 
 EOF
 

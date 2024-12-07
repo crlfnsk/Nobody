@@ -11,7 +11,7 @@ MODULE nbody_io
   IMPLICIT NONE
   PRIVATE
 
-  PUBLIC :: load_bodies, print_bodies, print_acc, print_pos, print_pos2d
+  PUBLIC :: load_bodies, print_bodies, print_acc, print_pos, print_pos2d, print_E
   
 
 CONTAINS
@@ -133,5 +133,18 @@ CONTAINS
     write(*,*)
 
   END SUBROUTINE print_pos2d
+
+  SUBROUTINE print_E(idx, E0, E)
+    IMPLICIT NONE
+    
+    INTEGER(I4B)              :: idx
+    REAL(DP)                  :: E0, E, error
+    
+    error = (E - E0) / E0
+    OPEN(UNIT=20, file='energy.txt')
+    WRITE(20,"(I0, ' ')", advance="no") idx
+    WRITE(20, *) error
+    
+  END SUBROUTINE print_E
 
 END MODULE nbody_io
