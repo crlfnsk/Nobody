@@ -12,7 +12,8 @@
 
 # settings
 infile='out'
-every=100
+every=$1
+dt=$2
 
 # loop over lines 
 i=0     # file number counter
@@ -26,6 +27,9 @@ EOF
 awk -f tmp.awk $infile |\
 while read line
 do
+    # Adding the timestamp to each plot
+    step=$(echo "$line" | awk '{print $1}')
+    timestamp=$(echo "scale=4; $step * $dt" | bc)
 
     # set name of output png file 
     outfile=`printf "movie/threebody_%5.5i.png" $i`
@@ -38,36 +42,22 @@ do
 # use lots of settings in gnuplot including multiplot 
 # make sure FreeSans.ttf is in the stated dir or change accordingly
 gnuplot << EOF
-set term png font "/usr/share/fonts/truetype/freefont/FreeSans.ttf" 20 size 1024,480
+set term png font "/usr/share/fonts/truetype/freefont/FreeSans.ttf" 20 size 720, 480
 set out '$outfile'
-
-set multiplot
 
 unset key
 set border 31 lw 3
-set size square
+
+set label 1 "t=$timestamp"
+set label 1 at graph 0.05, 0.9
 
 set origin 0.0 , 0.0
-set size 0.5, 1
 
 set xlabel 'x'
 set ylabel 'y'
 
-set xrange [-1.5 to 2.5]
-set yrange [-1.71132486540518711774542560974902127 to 2.288675134594812882254574390250978]
-
-set xtics 1
-set ytics 1
-
-plot 'tmp.dat' using 2:3 with points pt 7 ps 3,\
-     'tmp.dat' using 5:6 with points pt 7 ps 3,\
-     'tmp.dat' using 8:9 with points pt 7 ps 3
-
-set origin 0.45 , 0.0
-set size 0.6, 1
-
-set xrange [-0.25 to 1.25]
-set yrange [-0.46132486540518711774542560974902127 to 1.038675134594812882254574390250978]
+set xrange [-3.0 to 3.0]
+set yrange [-2.0 to 2.0]
 
 set xtics 0.5
 set ytics 0.5

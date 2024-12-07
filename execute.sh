@@ -1,8 +1,10 @@
 #!/bin/bash
 
 time=50
-dt=0.001
-stepsize=50
+dt=0.0001
+stepsize=$(echo "scale=4; 0.1 / $dt" | bc)
+stepsize=${stepsize%.*} 
+#stepsize=10000
 framestep=3
 
 echo "$time
@@ -10,12 +12,12 @@ $dt
 $stepsize
 2
 1.0         0.00 0.00  0.0      0.0  0.0  0.0
-0.0001      0.00 0.90  0.0      1.054145257  0.0  0.0
+0.0001      0.00 0.90  0.0      0.6666999992  0.0  0.0
 " > input_file.inp
 
 ./nbody < input_file.inp > out
 
-subdir="data_d/dt$dt"
+subdir="data_5.1.3.b/dt$dt"
 
 mkdir $subdir
 outfile=$subdir"/error_$dt.png"
