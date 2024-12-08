@@ -44,12 +44,14 @@ PROGRAM nbody_integrator
     ! printing timesteps and positions
     !write(6, "(I0, ' ')", advance='no') i     ! comment out to leave out timesteps
 
-    CALL print_pos(system, i, stepsize)    ! prints x,y,z positions of particle
+    !CALL print_pos(system, i, stepsize)    ! prints x,y,z positions of particle
     !CALL print_pos2d(system)              ! prints x,y positions of particle
+    !CALL print_pos_vel(system, i, stepsize)    ! prints vx,vy, vz of particle
 
     ! printing Center of Mass (CoM) positions and velocities
     !print*, r_CoM(system)         ! prints CoM position 
     !print*, v_CoM(system)        ! prints CoM velocity
+    CALL print_pos_CoM(system, i, stepsize)    ! prints x,y,z positions of particle
 
     CALL print_E(i, E0, total_energy(system))
   END DO

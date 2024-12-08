@@ -9,11 +9,11 @@
 MODULE nbody_integrator
     USE parameters
     USE nbody_particles
-    use nbody_io
+    USE nbody_io
     IMPLICIT NONE
     PRIVATE
   
-    PUBLIC :: update_r, update_v, update_a, total_energy, norm_vec, r_CoM, v_CoM
+    PUBLIC :: update_r, update_v, update_a, total_energy, norm_vec, r_CoM, v_CoM, print_pos_CoM
   
   CONTAINS
  
@@ -200,6 +200,31 @@ MODULE nbody_integrator
     v_c = v/M 
     
   END FUNCTION v_CoM
+
+  SUBROUTINE print_pos_CoM(this, idx, stepsize)
+    IMPLICIT NONE
+    TYPE(nbodies), INTENT(in) :: this
+
+    INTEGER(I4B)              :: i, n, idx, stepsize
+    TYPE(particle)            :: p
+    REAL(DP), DIMENSION(3)    :: r
+
+    n = get_n(this)
+    if (mod(idx-1,stepsize) == 0) then
+      write(6,"(I0, ' ')", advance="no") idx
+      do i=1, n
+        p = get_body(this, i)
+        r = get_pos(p) - r_CoM(this)
+        if(i/=n) then
+          write(6,"(F20.16,' ',F20.16,' ',F20.16,' ')", advance="no") r(1), r(2), r(3)
+        else
+          write(6,"(F20.16,' ',F20.16,' ',F20.16)", advance="no") r(1), r(2), r(3)
+        endif
+      end do
+      write(*,*)
+    endif
+
+  END SUBROUTINE print_pos_CoM
   
   END MODULE nbody_integrator
   
