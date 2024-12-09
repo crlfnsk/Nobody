@@ -1,8 +1,5 @@
-# Hide executable:
-bin/
-# Durch makefile unnötig geworden
-# Inside the src folder:
-src/
-.parameters.mod
-.nbody_particles.mod
-.nbody_io.mod
+.gitignore
+
+/bin
+
+/src
